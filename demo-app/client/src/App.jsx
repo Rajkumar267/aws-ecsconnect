@@ -605,19 +605,23 @@ export default function App() {
               </div>
             </div>
             <div className="inspect-item">
-              <div className="inspect-label">Current Product Task ID</div>
-              <div className="inspect-value" style={{ fontSize: '0.85rem' }}>
-                {status?.productTask?.taskId || 'Loading...'}
+              <div className="inspect-label">Task ID</div>
+              <div className="inspect-value" title={status?.productTask?.taskId || ''}>
+                {status?.productTask?.taskId
+                  ? (status.productTask.taskId.length > 12
+                      ? `${status.productTask.taskId.substring(0, 8)}...`
+                      : status.productTask.taskId)
+                  : 'Loading...'}
               </div>
             </div>
             <div className="inspect-item">
-              <div className="inspect-label">Current Task Private IP</div>
+              <div className="inspect-label">Private IP</div>
               <div className="inspect-value" style={{ color: '#fff' }}>
                 {status?.productTask?.privateIp || 'Loading...'}
               </div>
             </div>
             <div className="inspect-item">
-              <div className="inspect-label">Task Status</div>
+              <div className="inspect-label">Status</div>
               <div className="inspect-value">
                 <span className="status-tag running">
                   <span className="status-dot green"></span>
@@ -673,15 +677,11 @@ export default function App() {
           <div className="explanation-banner" style={{ marginTop: '1.25rem' }}>
             <strong>How Service Connect Solves This:</strong>
             <p style={{ marginTop: '0.35rem' }}>
-              Without Service Connect, any caller hardcoding or caching a direct task IP (e.g.{' '}
-              <code style={{ color: 'var(--status-red)' }}>
-                {replacementResult ? replacementResult.oldPrivateIp : '172.31.xx.xx'}
-              </code>
-              ) immediately fails when the container restarts.
+              If a caller uses a direct task IP, that endpoint can become stale when ECS replaces the task.
             </p>
             <p style={{ marginTop: '0.35rem' }}>
-              With Service Connect, Order Service continues sending traffic to{' '}
-              <strong style={{ color: 'var(--accent-cyan)' }}>product-service:8081</strong>. The local Envoy sidecar proxy automatically tracks the new task instance and routes traffic seamlessly.
+              With Service Connect, Order Service continues calling{' '}
+              <strong style={{ color: 'var(--accent-cyan)' }}>product-service:8081</strong>, while Service Connect routes traffic to the current Product task.
             </p>
           </div>
         </div>
