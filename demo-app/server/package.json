@@ -1,0 +1,17 @@
+{
+  "name": "demo-backend",
+  "version": "1.0.0",
+  "description": "Demo backend for ECS Service Connect live demonstration",
+  "main": "server.js",
+  "type": "module",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node --watch server.js"
+  },
+  "dependencies": {
+    "@aws-sdk/client-ec2": "^3.750.0",
+    "@aws-sdk/client-ecs": "^3.750.0",
+    "cors": "^2.8.5",
+    "express": "^4.21.2"
+  }
+}

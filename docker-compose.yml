@@ -1,0 +1,74 @@
+services:
+
+  order-db:
+    image: postgres:16
+    container_name: order-db
+    environment:
+      POSTGRES_DB: order_db
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5433:5432"
+
+  product-db:
+    image: postgres:16
+    container_name: product-db
+    environment:
+      POSTGRES_DB: product_db
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5434:5432"
+
+  payment-db:
+    image: postgres:16
+    container_name: payment-db
+    environment:
+      POSTGRES_DB: payment_db
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5435:5432"
+
+
+  order-service:
+    image: order-service:latest
+    container_name: order-service
+    ports:
+      - "8080:8080"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://order-db:5432/order_db
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: postgres
+      PRODUCT_SERVICE_URL: http://product-service:8081
+      PAYMENT_SERVICE_URL: http://payment-service:8082
+    depends_on:
+      - order-db
+      - product-service
+      - payment-service
+
+
+  product-service:
+    image: product-service:latest
+    container_name: product-service
+    ports:
+      - "8081:8081"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://product-db:5432/product_db
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: postgres
+    depends_on:
+      - product-db
+
+
+  payment-service:
+    image: payment-service:latest
+    container_name: payment-service
+    ports:
+      - "8082:8082"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://payment-db:5432/payment_db
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: postgres
+    depends_on:
+      - payment-db
